@@ -1,0 +1,16 @@
+{
+	"beans sabji"	:	{
+				"green beans" : "1",
+				"olive oil" : "2",
+				"idli podi" : "2"
+				},
+	"chana masala sabji"	:	{
+				"garbanzo" : "0.5",
+				"olive oil" : "2",
+				"onion" : "0.5",
+				"tomato" : "2",
+				"chana masala":"0.125",
+				"garam masala":"0.125"
+				}
+}
+
