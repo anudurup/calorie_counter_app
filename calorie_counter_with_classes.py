@@ -52,34 +52,21 @@ class DailyCalorieTracker():
             for i,item in enumerate(match_items):
                 match_string += f"Index{i}:{item},"
             match_string = match_string[:-1]
-            st.text_input(label=f"Pick index of the items which matches \"{ingredient}\":\n  {match_string}:"
-            , key='add_item')
-            key = match_items[int(st.session_state["add_item"])]
+            key = match_items[int(input(f"Pick index of the items which matches \"{ingredient}\":\n  {match_string}:"))]
             if not key in match_items:
                 return None,None,None,None,None
             index = self.food_items.index(key)
             return int(self.calories[index]), self.measures[index],int(self.protein[index]),int(self.fats[index]),int(self.carbohydrates[index]) 
 
-    def add_item_to_dictionary(self,item):
+    def add_item_to_dictionary_internal(self,item):
         fname = 'calorie_dict.xlsx'
-        df = pd.read_excel(fname,engine = 'openpyxl')  
-        print("Completed")      
-        st.write("For item"+item)
-        st.text_input(label="Enter measure", key='measure')
-        measure = st.session_state["measure"]
-        if st.session_state['measure']:
-            st.text_input(label="Enter calories", key='calories')
-            calories = st.session_state["calories"]
-        if st.session_state["calories"]:
-            st.text_input(label="Enter protein", key='protein')
-            protein = st.session_state["protein"]
-        if st.session_state["protein"]:
-            st.text_input(label="Enter fats", key='fats')
-            fats = st.session_state["fats"]
-        if st.session_state["fats"]:
-            st.text_input(label="Enter carbs", key='carbs')
-            carbs = st.session_state["carbs"]
-
+        df = pd.read_excel(fname,engine = 'openpyxl')   
+        st.write("Enter all the values")
+        measure = st.session_state["measure"]    
+        calories = st.session_state["calories"]    
+        protein = st.session_state["protein"]   
+        fats = st.session_state["fats"]        
+        carbs = st.session_state["carbs"]
         if item in df['food_item'].values:
             print(f"{item} exists, so updating")
             df = pd.read_excel(fname,engine = 'openpyxl')
@@ -90,6 +77,15 @@ class DailyCalorieTracker():
             df = pd.read_excel(fname,engine = 'openpyxl')
             df = df.append(df2, ignore_index = True)
         self.update_excel_file(df,fname)
+
+    def add_item_to_dictionary(self,item):             
+        st.write("For item "+ st.session_state['item']) 
+        st.text_input(label="Enter measure", key='measure')
+        st.text_input(label="Enter calories", key='calories')
+        st.text_input(label="Enter protein", key='protein') 
+        st.text_input(label="Enter fats", key='fats')
+        st.text_input(label="Enter carbs", key='carbs')
+          
 
     def add_meal_for_the_day(self,type_of_meal,meal,quantity,ismeal=True):
         calories,measure,protein,fats,carbohydrates = self.get_calories_per_food_item(meal)
@@ -167,8 +163,7 @@ class DailyCalorieTracker():
                 update_meal = 0
                 create_meal = 1
             self.load_calorie_dict()
-            st.text_input(label=f"No of servings for {recipe}: ", key='no_of_servings')
-            no_of_servings = float(st.session_state["no_of_servings"])
+            no_of_servings = float(input(f"No of servings for {recipe}: "))
             recipe_dict = dict()
             recipe_dict[recipe] = ingredients 
             recipe_name,ingre_dict,total_cals,total_protein,total_fats,total_carbs = self.get_nutrition_facts(recipe_dict,no_of_servings)
